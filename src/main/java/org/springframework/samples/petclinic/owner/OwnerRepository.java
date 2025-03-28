@@ -61,7 +61,7 @@ public interface OwnerRepository extends JpaRepository<Owner, Integer> {
 	 * @return a Collection of matching {@link Owner}s (or an empty Collection if none
 	 * found)
 	 */
-	@Query("SELECT DISTINCT owner FROM Owner owner JOIN owner.pets pet WHERE pet.name LIKE %:petName%")
+	@Query("SELECT DISTINCT owner FROM Owner owner JOIN owner.pets pet WHERE LOWER(pet.name) LIKE LOWER(CONCAT('%', :petName, '%'))")
 	Page<Owner> findByPetNameContaining(@org.springframework.data.repository.query.Param("petName") String petName, Pageable pageable);
 
 	/**
@@ -72,7 +72,7 @@ public interface OwnerRepository extends JpaRepository<Owner, Integer> {
 	 * @return a Collection of matching {@link Owner}s (or an empty Collection if none
 	 * found)
 	 */
-	@Query("SELECT DISTINCT owner FROM Owner owner JOIN owner.pets pet WHERE owner.lastName LIKE %:lastName% AND pet.name LIKE %:petName%")
+	@Query("SELECT DISTINCT owner FROM Owner owner JOIN owner.pets pet WHERE LOWER(owner.lastName) LIKE LOWER(CONCAT('%', :lastName, '%')) AND LOWER(pet.name) LIKE LOWER(CONCAT('%', :petName, '%'))")
 	Page<Owner> findByLastNameAndPetName(
 		@org.springframework.data.repository.query.Param("lastName") String lastName, 
 		@org.springframework.data.repository.query.Param("petName") String petName, 
